@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="auth-fav.png" type="image/x-icon">
+    <title>Register Page</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Register your account</h1>
+
+        <form id='registerForm' action="/api/users/signup" method="POST">
+            <label for="userName">Username:</label>
+            <div class="custome-input">
+                <input type="text" id="userName" name="userName" placeholder="Your Name" autocomplete="off">
+                <i class='bx bxs-id-card'></i>
+            </div>
+            <label for="email">Email:</label>
+            <div class="custome-input">
+                <input type="email" name="email" placeholder="Your Email" autocomplete="off">
+                <i class='bx bx-at'></i>
+            </div>
+            <label for="password">Password:</label>
+            <div class="custome-input">
+                <input type="password" name="password" placeholder="Your Password">
+                <i class='bx bx-lock-alt'></i>
+            </div>
+            <label for="firstName">First Name:</label>
+            <div class="custome-input">
+                <input type="text" name="firstName" placeholder="Your First Name" autocomplete="off">
+                <i class='bx bx-user'></i>
+            </div>
+
+            <label for="lastName">Last Name:</label>
+            <div class="custome-input">
+                <input type="text" name="lastName" placeholder="Your Last Name" autocomplete="off">
+                <i class='bx bx-user'></i>
+            </div>
+
+            <label for="age">Age:</label>
+            <div class="custome-input">
+                <input type="number" name="age" placeholder="Your Age">
+                <i class='bx bx-calendar'></i>
+            </div>
+
+            <label for="country">Country:</label>
+            <div class="custome-input">
+                <input type="text" name="country" placeholder="Your Country" autocomplete="off">
+                <i class='bx bx-globe'></i>
+            </div>
+
+            <label for="gender">Gender:</label>
+            <div class="custome-input">
+                <input type="text" name="gender" placeholder="Your Gender" autocomplete="off">
+                <i class='bx bx-user'></i>
+            </div>
+            <button type="submit" class="login">Sign up</button>
+            <div class="links">
+                <a href="login.html">Already have an account?</a>
+            </div>
+        </form>
+
+    </div>
+    <script src="js/script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Feed App</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/news.css">
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <li><a href="http://localhost:3000/index.html">Home</a></li>
+            <li><a href="http://localhost:3000/admin.html" id="adminLink">Admin Page</a></li>
+            <li><a href="http://localhost:3000/github.html">GitHub</a></li>
+            <li><a href="http://localhost:3000/job_search.html">Jobs</a></li>
+            <li><a href="http://localhost:3000/news.html">News</a></li>
+            <li>
+                <a href="http://localhost:3000/login.html" id="logout"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+
+            </li>
+        </ul>
+    </div>
+    <h1>News Feed</h1>
+    <div id="news-feed"></div>
+
+    <script>
+        // Fetch data from the server
+        fetch('/news-feed')
+            .then(response => response.json())
+            .then(data => {
+                // Log the received data to the console
+                console.log('Received data:', data);
+
+                // Handle the results (or perform any other actions)
+                const newsFeedDiv = document.getElementById('news-feed');
+
+                // Check if data is an object with categories
+                if (typeof data === 'object' && !Array.isArray(data)) {
+                    // Loop through each category
+                    for (const category in data) {
+                        if (data.hasOwnProperty(category) && Array.isArray(data[category])) {
+                            // Loop through news items in the category
+                            data[category].forEach(newsItem => {
+                                newsFeedDiv.innerHTML += `
+                                    <div class="news-item">
+                                        <img src="${newsItem.og}" alt="Source Icon">
+                                        <div class="news-item-content">
+                                            <p class="news-item-title">${newsItem.title}</p>
+                                            <p class="news-item-source">${newsItem.source}</p>
+                                            <p class="news-item-link"><a href="${newsItem.link}" target="_blank">${newsItem.link}</a></p>
+                                        </div>
+                                        <hr>
+                                    </div>
+                                `;
+                            });
+                        }
+                    }
+                } else {
+                    console.error('Invalid data format. Expected an object with categories.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    </script>
+</body>
+</html>

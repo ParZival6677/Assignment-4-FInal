@@ -1,0 +1,63 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.item-container {
+    border: 1px solid #ccc;
+    margin: 10px;
+    padding: 20px;
+}
+
+.carousel {
+    max-width: 300px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.carousel img {
+    width: 100%;
+    display: inline-block;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+#itemsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 20px;
+}
+
+.item-container p {
+    margin-bottom: 5px;
+}

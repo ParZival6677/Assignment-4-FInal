@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jobs</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/jobs.css">
+</head>
+<body>
+    <div class="navbar">
+        <ul>
+            <li><a href="http://localhost:3000/index.html">Home</a></li>
+            <li><a href="http://localhost:3000/admin.html" id="adminLink">Admin Page</a></li>
+            <li><a href="http://localhost:3000/github.html">GitHub</a></li>
+            <li><a href="http://localhost:3000/job_search.html">Jobs</a></li>
+            <li><a href="http://localhost:3000/news.html">News</a></li>
+            <li>
+                <a href="http://localhost:3000/login.html" id="logout"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+
+            </li>
+        </ul>
+    </div>
+    <h1>Jobs</h1>
+    <div id="results"></div>
+
+    <script>
+            // Fetch data from the server
+            fetch('/job-search?keywords=frontend,backend,fullstack')
+                .then(response => response.json())
+                .then(data => {
+                    // Handle the results (or perform any other actions)
+                    const resultsDiv = document.getElementById('results');
+                    data.results.forEach(job => {
+                        const jobCard = document.createElement('div');
+                        jobCard.classList.add('job-card');
+                        jobCard.innerHTML = `
+                            <h2><b>Title:</b> ${job.title}</h2>
+                            <p><b>Company:</b> ${job.company.display_name}</p>
+                            <p><b>Location:</b> ${job.location.display_name}</p>
+                            <p><b>Description:</b> ${job.description}</p>
+                            <p><b>Contract Type:</b> ${job.contract_type}</p>
+                            <p><b>Category:</b> ${job.category.label}</p>
+                            <p><b>Salary Range:</b> ${job.salary_min} - ${job.salary_max}</p>
+                            <hr>
+                        `;
+                        resultsDiv.appendChild(jobCard);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                });
+        </script>
+</body>
+</html> 
+

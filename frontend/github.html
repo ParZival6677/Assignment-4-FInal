@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Data</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/gihub.css">
+</head>
+<body>
+<div>
+    <div class="navbar">
+        <ul>
+            <li><a href="http://localhost:3000/index.html">Home</a></li>
+            <li><a href="http://localhost:3000/admin.html" id="adminLink">Admin Page</a></li>
+            <li><a href="http://localhost:3000/github.html">GitHub</a></li>
+            <li><a href="http://localhost:3000/job_search.html">Jobs</a></li>
+            <li><a href="http://localhost:3000/news.html">News</a></li>
+            <li>
+                <a href="http://localhost:3000/login.html" id="logout"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+            </li>
+        </ul>
+    </div>
+    <div class="container">
+        <h1>GitHub Data</h1>
+        <form id="github-form" class="github-form">
+            <input type="text" id="username" name="username" required>
+            <button type="submit" class="load-data" onclick="fetchData(event)">Fetch Data</button>
+        </form>
+        <div id="github-info" class="github-info"></div>
+    </div>
+
+    <script>
+        function hideForm() {
+            const githubForm = document.getElementById('github-form');
+            githubForm.style.display = 'none';
+        }
+
+        function fetchData(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            if (username === '') {
+                alert('Username is required');
+                return;
+            }
+            hideForm();
+            fetch(`https://api.github.com/users/${username}`)
+                .then(response => response.json())
+                .then(data => {
+                    const githubInfo = document.getElementById('github-info');
+                    githubInfo.innerHTML = `
+                        <img src="${data.avatar_url}" alt="Avatar">
+                        <p>Login: ${data.login}</p>
+                        <p>Public Repos: ${data.public_repos}</p>
+                        <p>Followers: ${data.followers}</p>
+                        <p>ID: ${data.id}</p>
+                        <p>Node ID: ${data.node_id}</p>
+                        <p>Public Gists: ${data.public_gists}</p>
+                        <p>Following: ${data.following}</p>
+                        <p>Created At: ${data.created_at}</p>
+                        <p>Updated At: ${data.updated_at}</p>
+                    `;
+                    githubInfo.style.display = 'block';
+                })
+                .catch(error => console.error('Error fetching GitHub data:', error));
+        }
+    </script>
+</body>
+</html>

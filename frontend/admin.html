@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Admin</title>
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <ul>
+            <li><a href="http://localhost:3000/index.html">Home</a></li>
+            <li><a href="http://localhost:3000/admin.html" id="adminLink">Admin Page</a></li>
+            <li><a href="http://localhost:3000/github.html">GitHub</a></li>
+            <li><a href="http://localhost:3000/job_search.html">Jobs</a></li>
+            <li><a href="http://localhost:3000/news.html">News</a></li>
+            <li>
+                <a href="http://localhost:3000/login.html" id="logout"><i class="fa-solid fa-right-from-bracket"></i>Logout</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Add Item Form -->
+    <div>
+        <h2>Add Item</h2>
+        <form id="addItemForm">
+            <label for="pictures">Pictures (comma-separated URLs):</label>
+            <input type="text" id="pictures" name="pictures" required>
+            <br>
+            <label for="names">Names (JSON array with language and value):</label>
+            <input type="text" id="names" name="names" required>
+            <br>
+            <label for="descriptions">Descriptions (JSON array with language and value):</label>
+            <input type="text" id="descriptions" name="descriptions" required>
+            <br>
+            <button type="button" onclick="addItem()">Add Item</button>
+        </form>
+    </div>
+
+    <!-- Update Item Form -->
+    <div>
+        <h2>Update Item</h2>
+        <form id="updateItemForm">
+            <label for="updateItemId">Item ID:</label>
+            <input type="text" id="updateItemId" name="updateItemId" required>
+            <br>
+            <label for="updateItemPictures">Pictures (comma-separated URLs):</label>
+            <input type="text" id="updateItemPictures" name="updateItemPictures" required>
+            <br>
+            <label for="updateItemNames">Names (JSON array with language and value):</label>
+            <input type="text" id="updateItemNames" name="updateItemNames" required>
+            <br>
+            <label for="updateItemDescriptions">Descriptions (JSON array with language and value):</label>
+            <input type="text" id="updateItemDescriptions" name="updateItemDescriptions" required>
+            <br>
+            <button type="button" onclick="updateItem()">Update Item</button>
+        </form>
+    </div>
+
+    <!-- Delete Item Form -->
+    <div>
+        <h2>Delete Item</h2>
+        <form id="deleteItemForm">
+            <label for="deleteItemId">Item ID:</label>
+            <input type="text" id="deleteItemId" name="deleteItemId" required>
+            <br>
+            <button type="button" onclick="deleteItem()">Delete Item</button>
+        </form>
+    </div>
+
+    <!-- Display Items -->
+    <div>
+        <h2>Portfolio Items</h2>
+        <div id="itemsContainer"></div>
+    </div>
+
+<script>
+    // Function to add a new item
+    function addItem() {
+        const pictures = document.getElementById('pictures').value.split(',');
+        const names = JSON.parse(document.getElementById('names').value);
+        const descriptions = JSON.parse(document.getElementById('descriptions').value);
+
+        fetch('/items', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pictures, names, descriptions })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Item created successfully', data);
+            // Refresh the displayed items after adding
+            fetchAndDisplayItems();
+        })
+        .catch(error => {
+            console.error('Error adding item:', error);
+        });
+    }
+
+    // Function to update an existing item
+    function updateItem() {
+        const itemId = document.getElementById('updateItemId').value;
+        const updateItemPictures = document.getElementById('updateItemPictures').value.split(',');
+        const updateItemNames = JSON.parse(document.getElementById('updateItemNames').value);
+        const updateItemDescriptions = JSON.parse(document.getElementById('updateItemDescriptions').value);
+
+        fetch(`/items/${itemId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ pictures: updateItemPictures, names: updateItemNames, descriptions: updateItemDescriptions })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Item updated successfully', data);
+            // Refresh the displayed items after updating
+            fetchAndDisplayItems();
+        })
+        .catch(error => {
+            console.error('Error updating item:', error);
+        });
+    }
+
+    // Function to delete an existing item
+    function deleteItem() {
+        const deleteItemId = document.getElementById('deleteItemId').value;
+
+        fetch(`/items/${deleteItemId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Item deleted successfully', data);
+            // Refresh the displayed items after deleting
+            fetchAndDisplayItems();
+        })
+        .catch(error => {
+            console.error('Error deleting item:', error);
+        });
+    }
+
+    // Fetch and display items on page load
+    function fetchAndDisplayItems() {
+        fetch('/items')
+        .then(response => response.json())
+        .then(data => displayItems(data))
+        .catch(error => {
+            console.error('Error fetching items:', error);
+        });
+    }
+
+    // Display items in the itemsContainer
+    function displayItems(items) {
+        const itemsContainer = document.getElementById('itemsContainer');
+        itemsContainer.innerHTML = ''; // Clear previous items
+
+        items.forEach(item => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item-container';
+
+            // Carousel for pictures
+            const carouselDiv = document.createElement('div');
+            carouselDiv.className = 'carousel';
+            item.pictures.forEach(picture => {
+                const img = document.createElement('img');
+                img.src = picture;
+                carouselDiv.appendChild(img);
+            });
+
+            itemDiv.appendChild(carouselDiv);
+
+            // Display name and description
+            const nameParagraph = document.createElement('p');
+            const descriptionParagraph = document.createElement('p');
+            nameParagraph.textContent = `Name: ${item.names[0].value} (${item.names[0].language})`;
+            descriptionParagraph.textContent = `Description: ${item.descriptions[0].value} (${item.descriptions[0].language})`;
+
+            itemDiv.appendChild(nameParagraph);
+            itemDiv.appendChild(descriptionParagraph);
+
+            itemsContainer.appendChild(itemDiv);
+        });
+    }
+
+    // Fetch and display items on page load
+    fetchAndDisplayItems();
+</script>
+
+</body>
+</html>
