@@ -2,6 +2,7 @@
 const bcrypt = require("bcrypt");
 const db = require("../models");
 const jwt = require("jsonwebtoken");
+const nodemailer = require('nodemailer');
 
 const User = db.users;
 
@@ -41,6 +42,9 @@ const signup = async (req, res) => {
             res.cookie("jwt", token, { maxAge: 1 * 24 * 60 * 60, httpOnly: true });
             console.log("user", JSON.stringify(user, null, 2));
             console.log(token);
+
+            // Send a welcome email
+            await sendWelcomeEmail(user.email, user.userName);
 
             return res.status(201).json({ message: 'User registered successfully' });
         } else {
@@ -82,6 +86,30 @@ const login = async (req, res) => {
     }
 };
 
+const transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: {
+        user: 'grofis.togma@gmail.com', 
+        pass: 'poseydo5913', 
+    },
+});
+
+
+const sendWelcomeEmail = async (email, username) => {
+    try {
+        const mailOptions = {
+            from: 'grofis.togma@gmail.com', 
+            to: email,
+            subject: 'Welcome to Your App',
+            text: `Hello ${username},\n\nWelcome to Your App! We're excited to have you on board.`,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log('Welcome email sent successfully');
+    } catch (error) {
+        console.log('Error sending welcome email:', error);
+    }
+};
 
 module.exports = {
     signup,
